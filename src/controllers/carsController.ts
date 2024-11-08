@@ -2,27 +2,27 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Cars } from "../entities/Cars";
 
-const productRepository = AppDataSource.getRepository(Cars);
+const carsRepository = AppDataSource.getRepository(Cars);
 
 // GET - Obtener Todos los Productos
 export const getAllCars = async(req: Request, res: Response) => {
   try {
-    const Cars = await productRepository.find();
-    res.json(Cars);
+    const cars = await carsRepository.find();
+    res.json(cars);
   } catch(error) {
     res.status(500).json({ message: "Error al obtener productos." });
   }
 };
 
 // GET by ID - Obetener Producto por ID
-export const getProductById = async(req: Request, res: Response) => {
+export const getCarsById = async(req: Request, res: Response) => {
   try {
-    const Cars = await productRepository.findOneBy({
+    const cars = await carsRepository.findOneBy({
       id: parseInt(req.params.id),
     });
 
-    if(Cars) {
-      res.json(Cars);
+    if(cars) {
+      res.json(cars);
     } else {
       res.status(404).json({ message: "Producto no encontrado" });
     }
@@ -32,36 +32,36 @@ export const getProductById = async(req: Request, res: Response) => {
 };
 
 // POST - Crear un nuevo Producto
-export const createProduct = async(req: Request, res: Response) => {
+export const createCars = async(req: Request, res: Response) => {
   try {
     const { name, description, price } = req.body;
-    const Cars = new Cars();
-    Cars.name = name;
-    Cars.description = description;
-    Cars.price = price;
+    const cars = new Cars();
+    cars.name = name;
+    cars.description = description;
+    cars.price = price;
 
-    await productRepository.save(Cars);
-    res.status(201).json(Cars);
+    await carsRepository.save(cars);
+    res.status(201).json(cars);
   } catch(error) {
     res.status(500).json({ message: "Error al crear el producto." });
   }
 };
 
 // PUT - Actualizar un Producto existente
-export const updateProduct = async(req: Request, res: Response) => {
+export const updateCars = async(req: Request, res: Response) => {
   try {
     const { name, description, price } = req.body;
-    const Cars = await productRepository.findOneBy({
+    const cars = await carsRepository.findOneBy({
       id: parseInt(req.params.id),
     });
 
-    if(Cars) {
-      Cars.name = name ?? Cars.name;
-      Cars.description = description ?? Cars.description;
-      Cars.price = price ?? Cars.price;
+    if(cars) {
+      cars.name = name ?? cars.name;
+      cars.description = description ?? cars.description;
+      cars.price = price ?? cars.price;
 
-      await productRepository.save(Cars);
-      res.json(Cars);
+      await carsRepository.save(cars);
+      res.json(cars);
     } else {
       res.status(404).json({ message: "Producto no encontrado" });
     }
@@ -71,14 +71,14 @@ export const updateProduct = async(req: Request, res: Response) => {
 };
 
 // DELETE - Borrar un Producto
-export const deleteProduct = async(req: Request, res: Response) => {
+export const deleteCars = async(req: Request, res: Response) => {
   try {
-    const Cars = await productRepository.findOneBy({
+    const cars = await carsRepository.findOneBy({
       id: parseInt(req.params.id),
     });
 
-    if (Cars) {
-      await productRepository.remove(Cars);
+    if (cars) {
+      await carsRepository.remove(cars);
       res.json({ message: "Producto eliminado." });
     } else {
       res.status(404).json({ message: "Producto no encontrado." });
